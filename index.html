@@ -67,7 +67,7 @@
 		  						</div>
 		  						<div class="col-sm-3">
 		  							<div class="form-group">
-			      						<button type="submit" class="btn btn-primary btn-lg btn-block" style="float:right;" ng-click="addTask()">Add Task</button>
+			      						<button type="submit" class="btn btn-primary btn-lg btn-block" style="float:right;" ng-click="addTask()" ng-disabled="disableAdd">Add Task</button>
 			      					</div>		
 		  						</div>
 		  					</div>
@@ -117,9 +117,10 @@
 				$scope.cHigh=0;
 				$scope.cMedium=0;
 				$scope.cLow=0;
-
-			};
+				$scope.disableAdd=false;
+			}
 			$scope.addTask=function(){
+				$scope.disableAdd=true;
 				if($scope.newTask!=""){
 					$scope.tasks.push({task:$scope.newTask,date:Date.now(),isDone:false,priority:$scope.priority});
 					$scope.newTask="";
@@ -132,8 +133,10 @@
 					if($scope.priority==='Low')
 						$scope.cLow++;
 				}
+				$scope.disableAdd=false;
 			};
 			$scope.deleteTodo=function(task){
+				$scope.disableAdd=true;
 				var index=$scope.tasks.indexOf(task);
 				if(index!=-1){
 					$scope.tasks.splice(index, 1);
@@ -146,6 +149,7 @@
 					if($scope.priority==='Low')
 						$scope.cLow--;
 				}
+				$scope.disableAdd=false;
 			};
 			$scope.showFn=function(x){
 				if($scope.show=='All')
