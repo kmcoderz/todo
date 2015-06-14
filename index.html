@@ -10,6 +10,7 @@
     	<link href="css/bootstrap.min.css" rel="stylesheet">
     	<!-- Angular  -->
     	<script src="js/angular.min.js"></script>
+    	<script src="js/angular-local-storage.min.js"></script>
     	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	    <!--[if lt IE 9]>
@@ -107,17 +108,25 @@
       		</div>
     	</div>
     	<script type="text/javascript">
-		var app=angular.module('myApp',[]);
-		app.controller('myCtrl',function($scope){
+		var app=angular.module('myApp',['LocalStorageModule']);
+		app.controller('myCtrl',function($scope,localStorageService){
 			$scope.init=function(){
-				$scope.tasks=[];	
+				if(!localStorageService.get("todoList")){
+					$scope.tasks=[];	
+					$scope.cHigh=0;
+					$scope.cMedium=0;
+					$scope.cLow=0;
+				}
+				else{
+					$scope.cHigh=localStorageService.get("cHigh");
+					$scope.cMedium=localStorageService.get("cMedium");
+					$scope.cLow=localStorageService.get("cLow");
+					$scope.tasks=localStorageService.get("todoList");	
+				}
 				$scope.newTask="";
 				$scope.show="All";
 				$scope.priority="High";
-				$scope.cHigh=0;
-				$scope.cMedium=0;
-				$scope.cLow=0;
-				$scope.disableAdd=false;
+				$scope.disableAdd=false;	
 			}
 			$scope.addTask=function(){
 				$scope.disableAdd=true;
@@ -175,6 +184,16 @@
 				else
 					return false;
 			};
+			$scope.$watch("tasks",function  (newVal,oldVal) {
+				if (newVal !== null && angular.isDefined(newVal) && newVal!==oldVal) {
+					localStorageService.clearAll();
+					localStorageService.add("todoList",angular.toJson($scope.tasks));
+					localStorageService.add("cHigh",$scope.cHigh);
+					localStorageService.add("cMedium",$scope.cMedium);
+					localStorageService.add("cLow",$scope.cLow);
+				}
+			},true);
+
 		});
 		</script>
     	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

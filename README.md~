@@ -7,5 +7,4 @@ Bootstrap, HTML5, CSS3, AngularJS
 Add Tasks according to priority,
 Priority Types (High, Medium, Low),
 Search Option,
-Classify according to All, Completed & Pending,
-Local Storage to save the notes.
+Classify according to All, Completed & Pending.
