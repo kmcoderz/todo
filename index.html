@@ -63,7 +63,7 @@
 												<li><a ng-click="priority='Low'">Low</a></li>
 	        								</ul>
 	      								</div>
-		  								<input type="text" class="form-control input-lg" id="addTask" placeholder="Task" ng-model="newTask" autocomplete="off">
+		  								<input type="text" class="form-control input-lg" id="addTask" placeholder="Task" ng-model="newTask" autocomplete="off" required>
 			      					</div>
 		  						</div>
 		  						<div class="col-sm-3">
@@ -90,8 +90,8 @@
 	  						<div class="row">
 								<ul style="list-style-type:none">
 									<li ng-repeat="x in tasks | filter:priorityFn | filter:showFn | filter:search | orderBy:'-date'">
-										<h4 ng-if="x.isDone==true"><input type="checkbox" ng-model="x.isDone" class="text-muted"> <strike class="text-muted">{{x.task}}</strike> <a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
-										<h4 ng-if="x.isDone==false"><input type="checkbox" ng-model="x.isDone"> {{x.task}} <a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
+										<h4 ng-if="x.isDone==true"><input type="checkbox" ng-model="x.isDone" class="text-muted"> <strike class="text-muted">{{x.task}}</strike> <br><small><i>{{x.date | date}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
+										<h4 ng-if="x.isDone==false"><input type="checkbox" ng-model="x.isDone"> {{x.task}} <br><small><i>{{x.date | date}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
 									</li>
 								</ul>  							
 	  						</div>
