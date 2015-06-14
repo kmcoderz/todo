@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+    	<title>ToDO</title>
+
+    	<!-- Bootstrap -->
+    	<link href="css/bootstrap.min.css" rel="stylesheet">
+    	<!-- Angular  -->
+    	<script src="js/angular.min.js"></script>
+    	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	    <!--[if lt IE 9]>
+	      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	    <![endif]-->
+	    <style type="text/css">
+	    html,
+		body {
+		  	height: 100%;
+		}
+		#wrap {
+		  	min-height: 100%;
+		  	height: auto;
+		  	margin: 0 auto -60px;
+		  	padding: 0 0 60px;
+		}
+		.container .credit {
+	  		margin: 20px 0;
+		}
+	    </style>
+  	</head>
+  	<body ng-app="myApp" ng-controller="myCtrl" ng-init="init()">
+  		<div id="wrap">
+	  		<div class="container-fluid">
+	  			<div class="jumbotron text-center">
+	    		<button type="button" class="btn btn-primary btn-lg"><h1>ToDO !</h1></button>
+	    		</div>
+	    	</div>
+
+	    	<div class="container-fluid">
+	  			<div class="row">
+	    			<div class="col-sm-2">
+	    				<div class="list-group">
+	    					<a class="list-group-item" ng-class="{'active':priority=='High'}" ng-click="priority='High'">High Priority <span class="badge">{{cHigh}}</span></a>
+	    					<a class="list-group-item" ng-class="{'active':priority=='Medium'}" ng-click="priority='Medium'">Medium Priority <span class="badge">{{cMedium}}</span></a>
+							<a class="list-group-item" ng-class="{'active':priority=='Low'}" ng-click="priority='Low'">Low Priority <span class="badge">{{cLow}}</span></a>  
+						</div>
+	    			</div>
+	    			<div class="col-sm-8">
+	    				<form class="form" role="form">
+	    					<div class="row">
+		  						<div class="col-sm-9">
+		  							<div class="input-group">
+		  								<div class="input-group-btn">
+	        								<button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="dropdown" aria-expanded="false">Priority <span class="caret"></span></button>
+	        								<ul class="dropdown-menu" role="menu">
+												<li><a ng-click="priority='High'">High</a></li>
+												<li><a ng-click="priority='Medium'">Medium</a></li>
+												<li><a ng-click="priority='Low'">Low</a></li>
+	        								</ul>
+	      								</div>
+		  								<input type="text" class="form-control input-lg" id="addTask" placeholder="Task" ng-model="newTask" autocomplete="off">
+			      					</div>
+		  						</div>
+		  						<div class="col-sm-3">
+		  							<div class="form-group">
+			      						<button type="submit" class="btn btn-primary btn-lg btn-block" style="float:right;" ng-click="addTask()">Add Task</button>
+			      					</div>		
+		  						</div>
+		  					</div>
+		  					<hr>
+	  						<div class="row">
+	  							<div class="col-sm-8 col-xs-5">
+								    <div class="input-group">
+	      								<input type="text" class="form-control" placeholder="Search for..." style="border-radius: 15px;" ng-model="search">
+	      							</div>
+	      						</div>
+	  							<div class="col-sm-4 col-xs-7">
+	  								<ul class="nav nav-pills">
+										<li role="presentation" ng-class="{'active':show=='All'}" ng-click="show='All'"><a>All</a></li>
+										<li role="presentation" ng-class="{'active':show=='Complete'}" ng-click="show='Complete'"><a>Completed</a></li>
+										<li role="presentation" ng-class="{'active':show=='Pending'}" ng-click="show='Pending'"><a>Pending</a></li>
+									</ul>
+	  							</div>
+	  						</div>
+	  						<div class="row">
+								<ul style="list-style-type:none">
+									<li ng-repeat="x in tasks | filter:priorityFn | filter:showFn | filter:search | orderBy:'-date'">
+										<h4 ng-if="x.isDone==true"><input type="checkbox" ng-model="x.isDone" class="text-muted"> <strike class="text-muted">{{x.task}}</strike> <a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
+										<h4 ng-if="x.isDone==false"><input type="checkbox" ng-model="x.isDone"> {{x.task}} <a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
+									</li>
+								</ul>  							
+	  						</div>
+			      		</form>
+
+	    			</div>
+	    			<div class="col-sm-2"></div>
+	  			</div>
+			</div>
+		</div>
+		<div id="footer">
+      		<div class="container text-center">
+        		<p class="text-muted credit">ToDO ! | &copy; <a href="#">Kalyan Mondal</a> | <span class="label label-primary">{{tasks.length}} Tasks</span></p>
+      		</div>
+    	</div>
+    	<script type="text/javascript">
+		var app=angular.module('myApp',[]);
+		app.controller('myCtrl',function($scope){
+			$scope.init=function(){
+				$scope.tasks=[];	
+				$scope.newTask="";
+				$scope.show="All";
+				$scope.priority="High";
+				$scope.cHigh=0;
+				$scope.cMedium=0;
+				$scope.cLow=0;
+
+			};
+			$scope.addTask=function(){
+				if($scope.newTask!=""){
+					$scope.tasks.push({task:$scope.newTask,date:Date.now(),isDone:false,priority:$scope.priority});
+					$scope.newTask="";
+					if($scope.priority==='High')
+						$scope.cHigh++;
+					else
+					if($scope.priority==='Medium')
+						$scope.cMedium++;	
+					else
+					if($scope.priority==='Low')
+						$scope.cLow++;
+				}
+			};
+			$scope.deleteTodo=function(task){
+				var index=$scope.tasks.indexOf(task);
+				if(index!=-1){
+					$scope.tasks.splice(index, 1);
+					if($scope.priority==='High')
+						$scope.cHigh--;
+					else
+					if($scope.priority==='Medium')
+						$scope.cMedium--;	
+					else
+					if($scope.priority==='Low')
+						$scope.cLow--;
+				}
+			};
+			$scope.showFn=function(x){
+				if($scope.show=='All')
+					return true;
+				else
+				if(x.isDone && $scope.show==='Complete')
+					return true;
+				else
+				if(!x.isDone && $scope.show==='Pending')
+					return true;
+				else
+					return false;
+			};
+			$scope.priorityFn=function(x){
+				if($scope.priority==='High' && x.priority==='High')
+					return true;
+				else
+				if($scope.priority==='Medium' && x.priority==='Medium')
+					return true;
+				else
+				if($scope.priority==='Low' && x.priority==='Low')
+					return true;
+				else
+					return false;
+			};
+		});
+		</script>
+    	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	    <!-- Include all compiled plugins (below), or include individual files as needed -->
+	    <script src="js/bootstrap.min.js"></script>
+  	</body>
+</html>
+
+</head>
+<body>
+</body>
+</html>
