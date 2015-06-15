@@ -12,7 +12,7 @@
     	<script src="js/angular.min.js"></script>
     	<script src="js/angular-local-storage.min.js"></script>
     	<script src="js/xeditable.js"></script>
-
+    	
     	<link href="css/xeditable.css" rel="stylesheet">
 
     	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -78,9 +78,10 @@
 								</ul>
   							</div>
   						</div>
+  						<br>
   						<div class="row">
 							<ul style="list-style-type:none">
-								<li ng-repeat="x in tasks | filter:priorityFn | filter:showFn | filter:search | orderBy:'-date'">
+								<li class="box" ng-animate="'animate'" ng-repeat="x in tasks | filter:priorityFn | filter:showFn | filter:search | orderBy:'-date'">
 									<h4 ng-if="x.isDone==true"><input type="checkbox" ng-model="x.isDone" class="text-muted"> <strike class="text-muted"><span editable-text="x.task">{{x.task || 'Empty'}}</span></strike> <br><small><i>{{x.date | date:'h:mm a, MMM d'}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
 									<h4 ng-if="x.isDone==false"><input type="checkbox" ng-model="x.isDone"> <span editable-text="x.task">{{x.task || 'Empty'}}</span><br><small><i>{{x.date | date:'h:mm a, MMM d'}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
 								</li>

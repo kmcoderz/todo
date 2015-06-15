@@ -9,5 +9,14 @@ body {
   	padding: 0 0 60px;
 }
 .container .credit {
-		margin: 20px 0;
+	margin: 20px 0;
+}
+.box {
+	border:1px solid #999;
+	margin-top:5px;
+	padding:4px;
+	border-radius:4px;
+	background:#eee;
+	-webkit-transition:all linear 0.5s;
+	transition:all linear 0.5s;
 }
