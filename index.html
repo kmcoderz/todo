@@ -81,13 +81,14 @@
   						<div class="row">
 							<ul style="list-style-type:none">
 								<li ng-repeat="x in tasks | filter:priorityFn | filter:showFn | filter:search | orderBy:'-date'">
-									<h4 ng-if="x.isDone==true"><input type="checkbox" ng-model="x.isDone" class="text-muted"> <strike class="text-muted"><span editable-text="x.task">{{x.task || 'Empty'}}</span></strike> <br><small><i>{{x.date | date}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
-									<h4 ng-if="x.isDone==false"><input type="checkbox" ng-model="x.isDone"> <span editable-text="x.task">{{x.task || 'Empty'}}</span><br><small><i>{{x.date | date}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
+									<h4 ng-if="x.isDone==true"><input type="checkbox" ng-model="x.isDone" class="text-muted"> <strike class="text-muted"><span editable-text="x.task">{{x.task || 'Empty'}}</span></strike> <br><small><i>{{x.date | date:'h:mm a, MMM d'}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
+									<h4 ng-if="x.isDone==false"><input type="checkbox" ng-model="x.isDone"> <span editable-text="x.task">{{x.task || 'Empty'}}</span><br><small><i>{{x.date | date:'h:mm a, MMM d'}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
 								</li>
 							</ul>  							
   						</div>
 	    			</div>
-	    			<div class="col-sm-2"></div>
+	    			<div class="col-sm-2">
+	    			</div>
 	  			</div>
 			</div>
 		</div>
@@ -96,97 +97,9 @@
         		<p class="text-muted credit">ToDO ! | &copy; <a href="https://github.com/kmcoderz">Kalyan Mondal</a> | <span class="label label-primary">{{tasks.length}} Tasks</span></p>
       		</div>
     	</div>
-    	<script type="text/javascript">
-		var app=angular.module('myApp',['LocalStorageModule','xeditable']);
-		app.run(function(editableOptions) {
-  			editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
-		});
-		app.controller('myCtrl',function($scope,localStorageService){
-			$scope.init=function(){
-				if(!localStorageService.get("todoList")){
-					$scope.tasks=[];	
-					$scope.cHigh=0;
-					$scope.cMedium=0;
-					$scope.cLow=0;
-				}
-				else{
-					$scope.cHigh=localStorageService.get("cHigh");
-					$scope.cMedium=localStorageService.get("cMedium");
-					$scope.cLow=localStorageService.get("cLow");
-					$scope.tasks=localStorageService.get("todoList");	
-				}
-				$scope.newTask="";
-				$scope.show="All";
-				$scope.priority="High";
-				$scope.disableAdd=false;	
-			}
-			$scope.addTask=function(){
-				$scope.disableAdd=true;
-				if($scope.newTask!=""){
-					$scope.tasks.push({task:$scope.newTask,date:Date.now(),isDone:false,priority:$scope.priority});
-					$scope.newTask="";
-					if($scope.priority==='High')
-						$scope.cHigh++;
-					else
-					if($scope.priority==='Medium')
-						$scope.cMedium++;	
-					else
-					if($scope.priority==='Low')
-						$scope.cLow++;
-				}
-				$scope.disableAdd=false;
-			};
-			$scope.deleteTodo=function(task){
-				$scope.disableAdd=true;
-				var index=$scope.tasks.indexOf(task);
-				if(index!=-1){
-					$scope.tasks.splice(index, 1);
-					if($scope.priority==='High')
-						$scope.cHigh--;
-					else
-					if($scope.priority==='Medium')
-						$scope.cMedium--;	
-					else
-					if($scope.priority==='Low')
-						$scope.cLow--;
-				}
-				$scope.disableAdd=false;
-			};
-			$scope.showFn=function(x){
-				if($scope.show=='All')
-					return true;
-				else
-				if(x.isDone && $scope.show==='Complete')
-					return true;
-				else
-				if(!x.isDone && $scope.show==='Pending')
-					return true;
-				else
-					return false;
-			};
-			$scope.priorityFn=function(x){
-				if($scope.priority==='High' && x.priority==='High')
-					return true;
-				else
-				if($scope.priority==='Medium' && x.priority==='Medium')
-					return true;
-				else
-				if($scope.priority==='Low' && x.priority==='Low')
-					return true;
-				else
-					return false;
-			};
-			$scope.$watch("tasks",function  (newVal,oldVal) {
-				if (newVal !== null && angular.isDefined(newVal) && newVal!==oldVal) {
-					localStorageService.clearAll();
-					localStorageService.add("todoList",angular.toJson($scope.tasks));
-					localStorageService.add("cHigh",$scope.cHigh);
-					localStorageService.add("cMedium",$scope.cMedium);
-					localStorageService.add("cLow",$scope.cLow);
-				}
-			},true);
-
-		});
+    	<script src="js/myApp.js"></script>
+    	<script src="js/myCtrl.js"></script>
+		<script type="text/javascript">
 		</script>
     	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
