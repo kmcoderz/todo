@@ -11,28 +11,18 @@
     	<!-- Angular  -->
     	<script src="js/angular.min.js"></script>
     	<script src="js/angular-local-storage.min.js"></script>
+    	<script src="js/xeditable.js"></script>
+
+    	<link href="css/xeditable.css" rel="stylesheet">
+
     	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	    <!--[if lt IE 9]>
 	      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 	      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	    <![endif]-->
-	    <style type="text/css">
-	    html,
-		body {
-		  	height: 100%;
-		}
-		#wrap {
-		  	min-height: 100%;
-		  	height: auto;
-		  	margin: 0 auto -60px;
-		  	padding: 0 0 60px;
-		}
-		.container .credit {
-	  		margin: 20px 0;
-		}
-	    </style>
-  	</head>
+	    <link href="css/common.css" rel="stylesheet">
+	</head>
   	<body ng-app="myApp" ng-controller="myCtrl" ng-init="init()">
   		<div id="wrap">
 	  		<div class="container-fluid">
@@ -72,31 +62,30 @@
 			      					</div>		
 		  						</div>
 		  					</div>
-		  					<hr>
-	  						<div class="row">
-	  							<div class="col-sm-8 col-xs-5">
-								    <div class="input-group">
-	      								<input type="text" class="form-control" placeholder="Search for..." style="border-radius: 15px;" ng-model="search">
-	      							</div>
-	      						</div>
-	  							<div class="col-sm-4 col-xs-7">
-	  								<ul class="nav nav-pills">
-										<li role="presentation" ng-class="{'active':show=='All'}" ng-click="show='All'"><a>All</a></li>
-										<li role="presentation" ng-class="{'active':show=='Complete'}" ng-click="show='Complete'"><a>Completed</a></li>
-										<li role="presentation" ng-class="{'active':show=='Pending'}" ng-click="show='Pending'"><a>Pending</a></li>
-									</ul>
-	  							</div>
-	  						</div>
-	  						<div class="row">
-								<ul style="list-style-type:none">
-									<li ng-repeat="x in tasks | filter:priorityFn | filter:showFn | filter:search | orderBy:'-date'">
-										<h4 ng-if="x.isDone==true"><input type="checkbox" ng-model="x.isDone" class="text-muted"> <strike class="text-muted">{{x.task}}</strike> <br><small><i>{{x.date | date}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
-										<h4 ng-if="x.isDone==false"><input type="checkbox" ng-model="x.isDone"> {{x.task}} <br><small><i>{{x.date | date}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
-									</li>
-								</ul>  							
-	  						</div>
-			      		</form>
-
+		  				</form>
+	  					<hr>
+  						<div class="row">
+  							<div class="col-sm-8 col-xs-5">
+							    <div class="input-group">
+      								<input type="text" class="form-control" placeholder="Search for..." style="border-radius: 15px;" ng-model="search">
+      							</div>
+      						</div>
+  							<div class="col-sm-4 col-xs-7">
+  								<ul class="nav nav-pills">
+									<li role="presentation" ng-class="{'active':show=='All'}" ng-click="show='All'"><a>All</a></li>
+									<li role="presentation" ng-class="{'active':show=='Complete'}" ng-click="show='Complete'"><a>Completed</a></li>
+									<li role="presentation" ng-class="{'active':show=='Pending'}" ng-click="show='Pending'"><a>Pending</a></li>
+								</ul>
+  							</div>
+  						</div>
+  						<div class="row">
+							<ul style="list-style-type:none">
+								<li ng-repeat="x in tasks | filter:priorityFn | filter:showFn | filter:search | orderBy:'-date'">
+									<h4 ng-if="x.isDone==true"><input type="checkbox" ng-model="x.isDone" class="text-muted"> <strike class="text-muted"><span editable-text="x.task">{{x.task || 'Empty'}}</span></strike> <br><small><i>{{x.date | date}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
+									<h4 ng-if="x.isDone==false"><input type="checkbox" ng-model="x.isDone"> <span editable-text="x.task">{{x.task || 'Empty'}}</span><br><small><i>{{x.date | date}}</i></small><a><span class="glyphicon glyphicon-remove btn-xs" aria-hidden="true" style="float:right" ng-click="deleteTodo(x)"></span></a></h4>
+								</li>
+							</ul>  							
+  						</div>
 	    			</div>
 	    			<div class="col-sm-2"></div>
 	  			</div>
@@ -108,7 +97,10 @@
       		</div>
     	</div>
     	<script type="text/javascript">
-		var app=angular.module('myApp',['LocalStorageModule']);
+		var app=angular.module('myApp',['LocalStorageModule','xeditable']);
+		app.run(function(editableOptions) {
+  			editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+		});
 		app.controller('myCtrl',function($scope,localStorageService){
 			$scope.init=function(){
 				if(!localStorageService.get("todoList")){
