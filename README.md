@@ -1,6 +1,4 @@
 #ToDO ! List
-#Created By 
-Kalyan Mondal
 #Technology
 Bootstrap, HTML5, CSS3, AngularJS
 #Features
@@ -10,3 +8,5 @@ Search Option,
 Classify according to All, Completed & Pending,
 Local Storage to save the notes,
 Inline Edit the Tasks.
+#Created By 
+Kalyan Mondal
